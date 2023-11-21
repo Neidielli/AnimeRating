@@ -4,13 +4,13 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 
-const authRoutes = require('./routes/authRoutes');
-const userRoutes = require('./routes/userRoutes');
-const adminRoutes = require('./routes/adminRoutes');
-const animeRoutes = require('./routes/animeRoutes'); 
-const ratingRoutes = require('./routes/ratingRoutes');
-const customRoutes = require('./routes/customRoutes');
-const errorHandler = require('./utils/errorHandler');
+const authRoutes = require('./src/routes/authRoutes');
+const userRoutes = require('./src/routes/userRoutes');
+const adminRoutes = require('./src/routes/adminRoutes');
+const animeRoutes = require('./src/routes/animeRoutes'); 
+const ratingRoutes = require('./src/routes/ratingRoutes');
+const customRoutes = require('./src/routes/customRoutes');
+const errorHandler = require('./src/utils/errorHandler');
 
 const app = express();
 dotenv.config();
