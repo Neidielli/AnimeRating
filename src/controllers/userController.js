@@ -2,7 +2,7 @@ const User = require('../models/User');
 const authService = require('../services/authService');
 const errorHandler = require('../utils/errorHandler');
 
-exports.register = async (req, res) => {
+const register = async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
@@ -14,7 +14,7 @@ exports.register = async (req, res) => {
 
         // Cria um novo usuário
         const user = new User({ name, email, password });
-        await user.save();
+        await user.insertOne();
 
         // Gera um token JWT para o novo usuário
         const token = authService.generateToken(user);
@@ -23,4 +23,8 @@ exports.register = async (req, res) => {
     } catch (error) {
         errorHandler.handle(res, error);
     }
+};
+
+module.exports = {
+    register
 };

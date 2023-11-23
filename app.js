@@ -12,23 +12,20 @@ const ratingRoutes = require('./src/routes/ratingRoutes');
 const customRoutes = require('./src/routes/customRoutes');
 const errorHandler = require('./src/utils/errorHandler');
 
-const app = express();
 dotenv.config();
+const app = express();
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
 
-// Database connection
-mongoose.connect('mongodb://127.0.0.1:27017/animerating', { useNewUrlParser: true, useUnifiedTopology: true });
-
 // Routes
-app.use('/auth', authRoutes);
+// app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
-app.use('/admins', adminRoutes);
+// app.use('/admins', adminRoutes);
 app.use('/animes', animeRoutes); 
 app.use('/ratings', ratingRoutes); 
-app.use('/custom', customRoutes);
+// app.use('/custom', customRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
