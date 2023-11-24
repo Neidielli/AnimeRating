@@ -3,7 +3,8 @@ const authService = require('../services/authService');
 const errorHandler = require('../utils/errorHandler');
 
 const register = async (req, res) => {
-    try {
+    console.log('oie')
+    // try {
         const { name, email, password } = req.body;
 
         // Verifica se o e-mail já está em uso
@@ -14,15 +15,15 @@ const register = async (req, res) => {
 
         // Cria um novo usuário
         const user = new User({ name, email, password });
-        await user.insertOne();
+        await user.save();
 
         // Gera um token JWT para o novo usuário
-        const token = authService.generateToken(user);
+        // const token = authService.generateToken(user);
 
-        res.json({ success: true, token });
-    } catch (error) {
-        errorHandler.handle(res, error);
-    }
+        // res.json({ success: true, token });
+    // } catch (error) {
+    //     errorHandler.handle(res, error);
+    // }
 };
 
 module.exports = {
