@@ -3,7 +3,6 @@ const authService = require('../services/authService');
 const errorHandler = require('../utils/errorHandler');
 
 const register = async (req, res) => {
-    console.log('oie')
     // try {
         const { name, email, password } = req.body;
 
@@ -16,6 +15,7 @@ const register = async (req, res) => {
         // Cria um novo usuário
         const user = new User({ name, email, password });
         await user.save();
+        res.json({ success: true, message: 'User created successfully' });
 
         // Gera um token JWT para o novo usuário
         // const token = authService.generateToken(user);
