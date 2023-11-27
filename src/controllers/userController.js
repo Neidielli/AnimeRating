@@ -11,9 +11,9 @@ const register = async (req, res) => {
             return res.status(400).json({ error: 'Email already in use' });
         }
     
-        console.log('User antes:', user);
         // Cria um novo usuário
-        const user = new User({ name, email, password });
+        const user = new User({ name, email, password, role });
+        console.log('User antes:', user);
         await user.save();
         console.log('Usuário após o salvamento no Mongoose:', user);
         res.json({ success: true, message: 'User created successfully' });
@@ -22,8 +22,8 @@ const register = async (req, res) => {
 
 const adminAddUser = async (req, res) => {
         // verifica se usuário é admin
-        if (userData.role == 'admin') {
-            const { name, email, password } = req.body;
+        if (req.user.role == 'admin') {
+            const { name, email, password, role } = req.body;
 
             // Verifica se o e-mail já está em uso
             const existingUser = await User.findOne({ email });
@@ -32,7 +32,7 @@ const adminAddUser = async (req, res) => {
             }
 
             // Cria um novo usuário
-            const user = new User({ name, email, password });
+            const user = new User({ name, email, password, role });
             await user.save();
             res.json({ success: true, message: 'Hello Admin, User created successfully' });
         } else {
@@ -43,12 +43,12 @@ const adminAddUser = async (req, res) => {
 
 const adminEditUser = async (req, res) => {
     // verifica se usuário é admin
-    if (userData.role == 'admin') {
-        const userId = req.params.userId;
+    if (req.user.role == 'admin') {
+        const userEmail = req.params.email;
         const updatedUserData = req.body;
 
         // Verifica se o usuário a ser editado existe
-        const userToUpdate = await User.findById(userId);
+        const userToUpdate = await User.findOne({ email: userEmail });
         if (!userToUpdate) {
             return res.status(404).json({ error: 'Usuário não encontrado' });
         }
@@ -70,17 +70,17 @@ const adminEditUser = async (req, res) => {
 
 const adminDeletUser = async (req, res) => {
     // verifica se usuário é admin
-    if (userData.role == 'admin') {
-        const userId = req.params.userId;
+    if (req.user.role == 'admin') {
+        const userEmail = req.params.email;
 
         // Verifica se o usuário a ser excluído existe
-        const userToDelete = await User.findById(userId);
+        const userToDelete = await User.findOne({ email: userEmail });
         if (!userToDelete) {
             return res.status(404).json({ error: 'Usuário não encontrado' });
         }
 
         // Remove o usuário do banco de dados
-        await userToDelete.remove();
+        await userToDelete.deleteOne();
 
         res.json({ success: true, message: 'Hello Admin, User deleted successfully' });
     } else {
@@ -91,12 +91,12 @@ const adminDeletUser = async (req, res) => {
 
 const adminAddAdmin = async (req, res) => {
     // verifica se usuário é admin
-    if (userData.role == 'admin') {
+    if (req.user.role == 'admin') {
         const newAdminData = req.body;
 
         // Cria um novo usuário com a função de administrador
         const newAdmin = await User.create({
-            username: newAdminData.username,
+            name: newAdminData.name,
             password: newAdminData.password,
             email: newAdminData.email,
             role: 'admin',

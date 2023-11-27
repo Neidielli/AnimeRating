@@ -9,9 +9,9 @@ router.post('/register', userController.register);
 // admin cadastra usuario
 router.post('/admin/register', authServices.authenticateMiddleware, adminServices.authorizeAdminMiddleware, userController.adminAddUser);
 // atualiza usuário 
-router.put('/admin/:id', authServices.authenticateMiddleware, adminServices.authorizeAdminMiddleware, userController.adminEditUser);
+router.put('/admin/:email', authServices.authenticateMiddleware, adminServices.authorizeAdminMiddleware, userController.adminEditUser);
 // excluir usuário
-router.delete('/admin/:id', authServices.authenticateMiddleware, adminServices.authorizeAdminMiddleware, userController.adminDeletUser);
+router.delete('/admin/:email', authServices.authenticateMiddleware, adminServices.authorizeAdminMiddleware, userController.adminDeletUser);
 // admin cadastra admin
 router.post('/admin/registerAdmin', authServices.authenticateMiddleware, adminServices.authorizeAdminMiddleware, userController.adminAddAdmin);
 
