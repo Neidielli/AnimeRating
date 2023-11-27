@@ -4,13 +4,13 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 
-// const authRoutes = require('./src/routes/authRoutes');
+const authRoutes = require('./src/routes/authRoutes');
 const userRoutes = require('./src/routes/userRoutes');
 // const adminRoutes = require('./src/routes/adminRoutes');
-const animeRoutes = require('./src/routes/animeRoutes'); 
-const ratingRoutes = require('./src/routes/ratingRoutes');
+// const animeRoutes = require('./src/routes/animeRoutes'); 
+// const ratingRoutes = require('./src/routes/ratingRoutes');
 // const customRoutes = require('./src/routes/customRoutes');
-const errorHandler = require('./src/utils/errorHandler');
+// const errorHandler = require('./src/utils/errorHandler');
 
 dotenv.config();
 const app = express();
@@ -20,12 +20,12 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Routes
-// app.use('/auth', authRoutes);
-app.use('/user', userRoutes); // todas as rotas dentro de userRoutes ira ter /user antes
+app.use('/', authRoutes);
+app.use('/user', userRoutes);
 // app.use('/users', userRoutes);
 // app.use('/admins', adminRoutes);
-app.use('/animes', animeRoutes); 
-app.use('/ratings', ratingRoutes); 
+// app.use('/animes', animeRoutes); 
+// app.use('/ratings', ratingRoutes); 
 // app.use('/custom', customRoutes);
 
 // Error handling middleware
