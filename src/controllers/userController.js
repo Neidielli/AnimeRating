@@ -19,6 +19,26 @@ const register = async (req, res) => {
         res.json({ success: true, message: 'User created successfully' });
 
 };
+const edit = async (req, res) => {
+        const userEmail = req.params.email;
+        const updatedUserData = req.body;
+
+        // Verifica se o usuário a ser editado existe
+        const userToUpdate = await User.findOne({ email: userEmail });
+        if (!userToUpdate) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Atualiza os dados do usuário
+        userToUpdate.name = updatedUserData.name || userToUpdate.name;
+        userToUpdate.email = updatedUserData.email || userToUpdate.email;
+        userToUpdate.password = updatedUserData.password || userToUpdate.password;
+                
+        // Salva as alterações no banco de dados
+        await userToUpdate.save();
+
+        res.status(200).json({ message: 'Hello User, User updated successfully', user: userToUpdate });
+};
 
 const adminAddUser = async (req, res) => {
         // verifica se usuário é admin
@@ -50,7 +70,7 @@ const adminEditUser = async (req, res) => {
         // Verifica se o usuário a ser editado existe
         const userToUpdate = await User.findOne({ email: userEmail });
         if (!userToUpdate) {
-            return res.status(404).json({ error: 'Usuário não encontrado' });
+            return res.status(404).json({ error: 'User not found' });
         }
 
         // Atualiza os dados do usuário
@@ -61,7 +81,7 @@ const adminEditUser = async (req, res) => {
         // Salva as alterações no banco de dados
         await userToUpdate.save();
 
-        res.status(200).json({ message: 'Usuário atualizado com sucesso', user: userToUpdate });
+        res.status(200).json({ message: 'Hello Admin, User updated successfully', user: userToUpdate });
     } else {
         // Apenas usuários administradores 
         throw new Error('Unauthorized');
@@ -111,6 +131,7 @@ const adminAddAdmin = async (req, res) => {
 
 module.exports = {
     register,
+    edit,
     adminAddUser,
     adminEditUser,
     adminDeletUser,
