@@ -7,7 +7,7 @@ const dotenv = require('dotenv');
 const authRoutes = require('./src/routes/authRoutes');
 const userRoutes = require('./src/routes/userRoutes');
 const animeRoutes = require('./src/routes/animeRoutes'); 
-// const ratingRoutes = require('./src/routes/ratingRoutes');
+const ratingRoutes = require('./src/routes/ratingRoutes');
 // const customRoutes = require('./src/routes/customRoutes');
 // const errorHandler = require('./src/utils/errorHandler');
 
@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 app.use('/', authRoutes);
 app.use('/user', userRoutes);
 app.use('/animes', animeRoutes); 
-// app.use('/ratings', ratingRoutes); 
+app.use('/rating', ratingRoutes); 
 // app.use('/custom', customRoutes);
 
 // Error handling middleware
