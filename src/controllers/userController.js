@@ -23,6 +23,11 @@ const edit = async (req, res) => {
         const userEmail = req.params.email;
         const updatedUserData = req.body;
 
+        // Verifica se o usuário autenticado é o mesmo que está sendo editado
+        if (req.user.email !== userEmail) {
+            return res.status(403).json({ error: 'Permission denied. You can only edit your own profile.' });
+        }
+
         // Verifica se o usuário a ser editado existe
         const userToUpdate = await User.findOne({ email: userEmail });
         if (!userToUpdate) {

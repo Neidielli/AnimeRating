@@ -7,7 +7,7 @@ const authServices = require('../services/authMiddleware');
 // usuario se cadastra
 router.post('/register', userController.register);
 // usuario se edita
-router.put('/edit/:email', authServices.authenticateMiddleware, adminServices.authorizeAdminMiddleware, userController.edit);
+router.put('/edit/:email', authServices.authenticateMiddleware, userController.edit);
 // admin cadastra usuario
 router.post('/admin/register', authServices.authenticateMiddleware, adminServices.authorizeAdminMiddleware, userController.adminAddUser);
 // atualiza usuário 
