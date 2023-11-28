@@ -46,8 +46,6 @@ const edit = async (req, res) => {
 };
 
 const adminAddUser = async (req, res) => {
-        // verifica se usuário é admin
-        if (req.user.role == 'admin') {
             const { name, email, password, role } = req.body;
 
             // Verifica se o e-mail já está em uso
@@ -60,15 +58,9 @@ const adminAddUser = async (req, res) => {
             const user = new User({ name, email, password, role });
             await user.save();
             res.json({ success: true, message: 'Hello Admin, User created successfully' });
-        } else {
-            // Apenas usuários administradores
-            throw new Error('Unauthorized');
-        }       
 };
 
 const adminEditUser = async (req, res) => {
-    // verifica se usuário é admin
-    if (req.user.role == 'admin') {
         const userEmail = req.params.email;
         const updatedUserData = req.body;
 
@@ -86,37 +78,25 @@ const adminEditUser = async (req, res) => {
         // Salva as alterações no banco de dados
         await userToUpdate.save();
 
-        res.status(200).json({ message: 'Hello Admin, User updated successfully', user: userToUpdate });
-    } else {
-        // Apenas usuários administradores 
-        throw new Error('Unauthorized');
-    }       
+        res.status(200).json({ message: 'Hello Admin, User updated successfully', user: userToUpdate });      
 };
 
 const adminDeletUser = async (req, res) => {
-    // verifica se usuário é admin
-    if (req.user.role == 'admin') {
         const userEmail = req.params.email;
 
         // Verifica se o usuário a ser excluído existe
         const userToDelete = await User.findOne({ email: userEmail });
         if (!userToDelete) {
-            return res.status(404).json({ error: 'Usuário não encontrado' });
+            return res.status(404).json({ error: 'User not found' });
         }
 
         // Remove o usuário do banco de dados
         await userToDelete.deleteOne();
 
-        res.json({ success: true, message: 'Hello Admin, User deleted successfully' });
-    } else {
-        // Apenas usuários administradores 
-        throw new Error('Unauthorized');
-    }       
+        res.json({ success: true, message: 'Hello Admin, User deleted successfully' });  
 };
 
 const adminAddAdmin = async (req, res) => {
-    // verifica se usuário é admin
-    if (req.user.role == 'admin') {
         const newAdminData = req.body;
 
         // Cria um novo usuário com a função de administrador
@@ -127,11 +107,7 @@ const adminAddAdmin = async (req, res) => {
             role: 'admin',
         });
 
-        res.status(201).json({ message: 'Hello Admin, User Admin created successfully', admin: newAdmin });
-    } else {
-        // Apenas usuários administradores 
-        throw new Error('Unauthorized');
-    }       
+        res.status(201).json({ message: 'Hello Admin, User Admin created successfully', admin: newAdmin });     
 };
 
 module.exports = {
