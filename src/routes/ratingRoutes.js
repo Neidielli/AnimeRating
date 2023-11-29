@@ -5,10 +5,10 @@ const authServices = require('../services/authMiddleware');
 
 // Avaliar um anime por nome
 router.post('/:animeTitle/rate', authServices.authenticateMiddleware, ratingController.rateAnime);
-// Listar avaliações 
-router.get('/list', authServices.authenticateMiddleware, ratingController.listRating);
-// Edita a quantidade de avaliações
-router.post('/:animeTitle/rate', authServices.authenticateMiddleware, ratingController.rateAnime);
+// Listar avaliações por 0-10
+router.get('/listByValue/:rating', authServices.authenticateMiddleware, ratingController.listRatingsByValue);
+// Edita a quantidade de avaliações de um anime
+router.put('/edit/:title/ratings', authServices.authenticateMiddleware, ratingController.editAnimeRatings);
 // Deleta todas as avaliações
 router.post('/:animeTitle/rate', authServices.authenticateMiddleware, ratingController.rateAnime);
 

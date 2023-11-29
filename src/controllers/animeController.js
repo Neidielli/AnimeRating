@@ -1,4 +1,5 @@
 const Anime = require('../models/Anime');
+const Rating = require('../models/Rating');
 const errorHandler = require('../utils/errorHandler');
 
 const createAnime = async (req, res) => {
@@ -57,18 +58,38 @@ const deleteAnime = async (req, res) => {
 
 const listAnimes = async (req, res) => {
     try {
-        const animes = await Anime.find();
+        const animes = await Anime.find().populate('rating');
         res.json(animes);
     } catch (error) {
         errorHandler.handle(res, error);
     }
 };
 
+// const listAnimes = async (req, res) => {
+//     // try {
+//         const animes = await Anime.find().populate({ path: 'rating', select: 'rating' });
+
+//         // Mapeia os animes para formatar a resposta incluindo os valores de rating
+//         const formattedAnimes = animes.map(anime => {
+//             return {
+//                 title: anime.title,
+//                 description: anime.description,
+//                 rating: anime.rating.map(rating => rating.rating),
+//             };
+//         });
+
+//         res.json(formattedAnimes);
+//     // } catch (error) {
+//     //     errorHandler.handle(res, error);
+//     // }
+// };
+
+
 const getAnimeByTitle = async (req, res) => {
     // precisa verificar se o anime procurado existe
     const title = req.params.title;
 
-    const animes = await Anime.findOne({ title: title});
+    const animes = await Anime.findOne({ title: title}).populate('rating');
     res.json(animes);
 };
 
