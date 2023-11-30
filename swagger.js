@@ -55,6 +55,164 @@
  *         description: Internal server error
  */
 
+/**
+ * @swagger
+ * /edit/{title}:
+ *   put:
+ *     summary: Update an existing anime (admin)
+ *     tags: [Anime]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: AnimeData
+ *         in: path
+ *         description: Data of the anime to be updated
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - name: AnimeData
+ *         in: body
+ *         description: Updated data of the anime
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             title:
+ *               type: string
+ *             description:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Anime updated successfully
+ *       401:
+ *         description: Not authorized
+ *       404:
+ *         description: Anime not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /delete/{title}:
+ *   delete:
+ *     summary: Delete an existing anime (admin)
+ *     tags: [Anime]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: AnimeData
+ *         in: path
+ *         description: Title of the anime to be updated
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Anime updated successfully
+ *       401:
+ *         description: Not authorized
+ *       404:
+ *         description: Anime not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /list:
+ *   get:
+ *     summary: Get a list of anime (admin)
+ *     tags: [Anime]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: page
+ *         in: query
+ *         description: Page number for paginated results
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *       - name: pageSize
+ *         in: query
+ *         description: Number of items per page
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *     responses:
+ *       200:
+ *         description: List of anime retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   title:
+ *                     type: string
+ *                   description:
+ *                     type: string
+ *       401:
+ *         description: Not authorized
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /list:
+ *   get:
+ *     summary: Get a list of anime (admin)
+ *     tags: [Anime]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: title
+ *         in: params
+ *         description: Filter anime by title
+ *         required: false
+ *         schema:
+ *           type: string
+ *       - name: limite
+ *         in: query
+ *         description: Page number for paginated results
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *       - name: pagina
+ *         in: query
+ *         description: Number of items per page
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *     responses:
+ *       200:
+ *         description: List of anime retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   title:
+ *                     type: string
+ *                   description:
+ *                     type: string
+ *       401:
+ *         description: Not authorized
+ *       500:
+ *         description: Internal server error
+ */
+
+
 
 /**
  * @swagger
