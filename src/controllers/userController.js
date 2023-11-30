@@ -74,6 +74,37 @@ const adminAddUser = async (req, res) => {
             res.json({ success: true, message: 'Hello Admin, User created successfully' });
 };
 
+const adminListUser = async (req, res) => {
+    try {
+        const { limite, pagina } = req.query;
+
+        // Validação: Verifica se os parâmetros de paginação são válidos
+        const limiteInt = parseInt(limite, 10);
+        const paginaInt = parseInt(pagina, 10);
+
+        if (!Number.isInteger(limiteInt) || !Number.isInteger(paginaInt) || limiteInt <= 0 || paginaInt < 1) {
+            return res.status(400).json({ error: 'Invalid pagination parameters. Please provide valid values.' });
+        }
+
+        // Calcula o índice de início com base nos parâmetros de paginação
+        const indiceInicio = (paginaInt - 1) * limiteInt;
+
+        // Consulta os usuários com a paginação
+        const users = await User.find().skip(indiceInicio).limit(limiteInt);
+
+        // Verifica se há usuários encontrados
+        if (!users || users.length === 0) {
+            return res.status(404).json({ error: 'No users found' });
+        }
+
+        res.json(users);
+    } catch (error) {
+        // Se ocorrer algum erro durante o processo, você pode lidar com isso aqui
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
 const adminEditUser = async (req, res) => {
         const userEmail = req.params.email;
         const updatedUserData = req.body;
@@ -128,6 +159,7 @@ module.exports = {
     register,
     edit,
     adminAddUser,
+    adminListUser,
     adminEditUser,
     adminDeletUser,
     adminAddAdmin

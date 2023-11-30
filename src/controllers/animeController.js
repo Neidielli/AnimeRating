@@ -68,7 +68,21 @@ const deleteAnime = async (req, res) => {
 
 const listAnimes = async (req, res) => {
     try {
-        const animes = await Anime.find().populate('rating');
+        const { limite, pagina } = req.query;
+
+        // Validação: Verifica se os parâmetros de paginação são válidos
+        const limiteInt = parseInt(limite, 10);
+        const paginaInt = parseInt(pagina, 10);
+
+        if (!Number.isInteger(limiteInt) || !Number.isInteger(paginaInt) || limiteInt <= 0 || paginaInt < 1) {
+            return res.status(400).json({ error: 'Invalid pagination parameters. Please provide valid values.' });
+        }
+
+        // Calcula o índice de início com base nos parâmetros de paginação
+        const indiceInicio = (paginaInt - 1) * limiteInt;
+
+        // Consulta os animes com a paginação
+        const animes = await Anime.find().skip(indiceInicio).limit(limiteInt).populate('rating');
 
         // Validar se há animes para evitar enviar um array vazio
         if (!animes || animes.length === 0) {
@@ -77,7 +91,8 @@ const listAnimes = async (req, res) => {
 
         res.json(animes);
     } catch (error) {
-        errorHandler.handle(res, error);
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 };
 

@@ -10,6 +10,8 @@ router.post('/register', userController.register);
 router.put('/edit/:email', authServices.authenticateMiddleware, userController.edit);
 // admin cadastra usuario
 router.post('/admin/register', authServices.authenticateMiddleware, adminServices.authorizeAdminMiddleware, userController.adminAddUser);
+// admin lista usuario
+router.get('/admin/list', authServices.authenticateMiddleware, adminServices.authorizeAdminMiddleware, userController.adminListUser);
 // atualiza usuário 
 router.put('/admin/:email', authServices.authenticateMiddleware, adminServices.authorizeAdminMiddleware, userController.adminEditUser);
 // excluir usuário

@@ -33,14 +33,22 @@ const rateAnime = async (req, res) => {
 
 const listRatingsByValue = async (req, res) => {
     try {
-        const rating = req.params.rating;
+        const { limite, pagina } = req.query;
+        const ratingValue = req.params.rating;
 
-        // Verifica se o valor fornecido é um número
-        if (isNaN(rating)) {
-            return res.status(400).json({ error: 'Invalid value parameter. Please provide a valid number.' });
+        // Validação: Verifica se os parâmetros de paginação são válidos
+        const limiteInt = parseInt(limite, 10);
+        const paginaInt = parseInt(pagina, 10);
+
+        if (!Number.isInteger(limiteInt) || !Number.isInteger(paginaInt) || limiteInt <= 0 || paginaInt < 1) {
+            return res.status(400).json({ error: 'Invalid pagination parameters. Please provide valid values.' });
         }
 
-        const ratings = await Rating.find({ rating: Number(rating) });
+        // Calcula o índice de início com base nos parâmetros de paginação
+        const indiceInicio = (paginaInt - 1) * limiteInt;
+
+        // Consulta as avaliações pelo valor com a paginação
+        const ratings = await Rating.find({ rating: Number(ratingValue) }).skip(indiceInicio).limit(limiteInt);
 
         // Verifica se há avaliações encontradas
         if (!ratings || ratings.length === 0) {
@@ -49,7 +57,8 @@ const listRatingsByValue = async (req, res) => {
 
         res.json(ratings);
     } catch (error) {
-        errorHandler.handle(res, error);
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 };
 
