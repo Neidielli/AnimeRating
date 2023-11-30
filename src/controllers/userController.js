@@ -10,12 +10,17 @@ const register = async (req, res) => {
         if (existingUser) {
             return res.status(400).json({ error: 'Email already in use' });
         }
+
+        // Validação: Verifica se name, email e password são strings e foram fornecidos
+        if (!name || !email || !password || typeof name !== 'string' || typeof email !== 'string' || typeof password !== 'string') {
+            return res.status(400).json({ error: 'Invalid data format. Name, email, and password are required and must be strings.' });
+        }
     
         // Cria um novo usuário
         const user = new User({ name, email, password, role });
-        console.log('User antes:', user);
+
         await user.save();
-        console.log('Usuário após o salvamento no Mongoose:', user);
+
         res.json({ success: true, message: 'User created successfully' });
 
 };
@@ -32,6 +37,15 @@ const edit = async (req, res) => {
         const userToUpdate = await User.findOne({ email: userEmail });
         if (!userToUpdate) {
             return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Validação: Verifica se os dados de edição são strings
+        if (
+            (updatedUserData.name && typeof updatedUserData.name !== 'string') ||
+            (updatedUserData.email && typeof updatedUserData.email !== 'string') ||
+            (updatedUserData.password && typeof updatedUserData.password !== 'string')
+        ) {
+            return res.status(400).json({ error: 'Invalid data format. Name, email, and password must be strings.' });
         }
 
         // Atualiza os dados do usuário

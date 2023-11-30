@@ -4,7 +4,7 @@ const errorHandler = require('../utils/errorHandler');
 
 const createAnime = async (req, res) => {
     // try {
-        const { title, description, ratings } = req.body;
+        const { title, description } = req.body;
 
         // Verifica se o anime a ser criado existe
         const existingAnime = await Anime.findOne({ title });
@@ -12,8 +12,13 @@ const createAnime = async (req, res) => {
             return res.status(400).json({ error: 'Anime already created' });
         }
 
+        // Validação: Verifica se title e description são strings
+        if (typeof title !== 'string' || typeof description !== 'string') {
+            return res.status(400).json({ error: 'Invalid data format. Title and description must be strings.' });
+        }
+
         // Cria um novo anime
-        const anime = new Anime({ title, description, ratings: [] });
+        const anime = new Anime({ title, description});
         await anime.save();
         res.json({ success: true, message: 'Anime created successfully' });
     // } catch (error) {
@@ -29,6 +34,11 @@ const editAnime = async (req, res) => {
         const animeToUpdate = await Anime.findOne({ title: animeTitle });
         if (!animeToUpdate) {
             return res.status(404).json({ error: 'Anime not found' });
+        }
+
+        // Validação: Verifica se title e description são strings
+        if (typeof title !== 'string' || typeof description !== 'string') {
+            return res.status(400).json({ error: 'Invalid data format. Title and description must be strings.' });
         }
 
         // Atualiza os dados do anime
@@ -59,6 +69,12 @@ const deleteAnime = async (req, res) => {
 const listAnimes = async (req, res) => {
     try {
         const animes = await Anime.find().populate('rating');
+
+        // Validar se há animes para evitar enviar um array vazio
+        if (!animes || animes.length === 0) {
+            return res.status(404).json({ error: 'No animes found' });
+        }
+
         res.json(animes);
     } catch (error) {
         errorHandler.handle(res, error);
@@ -66,10 +82,15 @@ const listAnimes = async (req, res) => {
 };
 
 const getAnimeByTitle = async (req, res) => {
-    // precisa verificar se o anime procurado existe
     const title = req.params.title;
 
     const animes = await Anime.findOne({ title: title}).populate('rating');
+
+    // Verifica se o anime foi encontrado
+    if (!animes) {
+        return res.status(404).json({ error: 'Anime not found' });
+    }
+
     res.json(animes);
 };
 

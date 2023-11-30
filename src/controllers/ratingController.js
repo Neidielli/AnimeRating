@@ -42,6 +42,11 @@ const listRatingsByValue = async (req, res) => {
 
         const ratings = await Rating.find({ rating: Number(rating) });
 
+        // Verifica se há avaliações encontradas
+        if (!ratings || ratings.length === 0) {
+            return res.status(404).json({ error: 'No ratings found for the provided value.' });
+        }
+
         res.json(ratings);
     } catch (error) {
         errorHandler.handle(res, error);
@@ -54,6 +59,11 @@ const editCommentsRatings = async (req, res) => {
 
 
     const commentsToUpdate = await Rating.findOne({ comments: comment });
+
+    // Verifica se o comentário foi encontrado
+    if (!commentsToUpdate) {
+        return res.status(404).json({ error: 'Comment not found' });
+    }
 
     // Atualiza o Comentário
     commentsToUpdate.comments = updatedComments.comments || commentsToUpdate.comments;
