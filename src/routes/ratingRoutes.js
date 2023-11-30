@@ -2,14 +2,15 @@ const express = require('express');
 const router = express.Router();
 const ratingController = require('../controllers/ratingController');
 const authServices = require('../services/authMiddleware');
+const adminServices = require('../services/adminService');
 
 // Avaliar um anime por nome
 router.post('/:animeTitle/rate', authServices.authenticateMiddleware, ratingController.rateAnime);
 // Listar avaliações por 0-10
 router.get('/listByValue/:rating', authServices.authenticateMiddleware, ratingController.listRatingsByValue);
-// Edita a quantidade de avaliações de um anime
-router.put('/edit/:title/ratings', authServices.authenticateMiddleware, ratingController.editAnimeRatings);
+// Admin Edita comentários
+router.put('/edit/:comments', authServices.authenticateMiddleware, adminServices.authorizeAdminMiddleware, ratingController.editCommentsRatings);
 // Deleta todas as avaliações
-router.post('/:animeTitle/rate', authServices.authenticateMiddleware, ratingController.rateAnime);
+router.delete('/:_id', authServices.authenticateMiddleware, adminServices.authorizeAdminMiddleware, ratingController.deleteRating);
 
 module.exports = router;

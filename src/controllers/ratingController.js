@@ -7,6 +7,7 @@ const rateAnime = async (req, res) => {
     // try {
         const animeTitle = req.params.animeTitle;
         const ratingValue = req.body.rating;
+        const comments = req.body.comments;
 
         // Encontrar o anime pelo nome
         const anime = await Anime.findOne({ title: animeTitle });
@@ -15,7 +16,7 @@ const rateAnime = async (req, res) => {
         }
 
         // Criar um novo Rating
-        const rating = new Rating({ rating : ratingValue });
+        const rating = new Rating({ rating : ratingValue, comments: comments });
 
         // Salvar o Rating
         await rating.save();
@@ -47,27 +48,35 @@ const listRatingsByValue = async (req, res) => {
     }
 };
 
-const editAnimeRatings = async (req, res) => {
-    try {
-        const animeTitle = req.params.title;
-        const { newRatings } = req.body;
+const editCommentsRatings = async (req, res) => {
+    const comment = req.params.comments;
+    const updatedComments = req.body;
 
-        // Verifica se o anime a ser editado existe
-        const animeToUpdate = await Anime.findOne({ title: animeTitle });
-        if (!animeToUpdate) {
-            return res.status(404).json({ error: 'Anime not found' });
-        }
 
-        // Atualiza o array de avaliações do anime
-        animeToUpdate.rating = newRatings;
+    const commentsToUpdate = await Rating.findOne({ comments: comment });
 
-        // Salva as alterações no banco de dados
-        await animeToUpdate.save();
+    // Atualiza o Comentário
+    commentsToUpdate.comments = updatedComments.comments || commentsToUpdate.comments;
 
-        res.status(200).json({ message: 'Anime ratings updated successfully', anime: animeToUpdate });
-    } catch (error) {
-        errorHandler.handle(res, error);
+    // Salva as alterações
+    await commentsToUpdate.save();
+
+    res.status(200).json({ message: 'Hello Admin, Comments updated successfully' });
+};
+
+const deleteRating = async (req, res) => {
+    const ratingId = req.params._id;
+
+    // Verifica se o rating a ser excluido existe
+    const ratingToDelete = await Rating.findOne({ _id: ratingId });
+    if (!ratingToDelete) {
+        return res.status(404).json({ error: 'Rating not found' });
     }
+
+    // Remove o rating do banco de dados
+    await ratingToDelete.deleteOne();
+
+    res.status(200).json({ message: 'Hello Admin, Rating deleted successfully' });
 };
 
 
@@ -76,5 +85,6 @@ const editAnimeRatings = async (req, res) => {
 module.exports = {
     rateAnime,
     listRatingsByValue,
-    editAnimeRatings
+    editCommentsRatings,
+    deleteRating
 };
