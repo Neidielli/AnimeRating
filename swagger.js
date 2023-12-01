@@ -539,6 +539,12 @@
  *     security:
  *       - BearerAuth: []
  *     parameters:
+ *       - name: AnimeTitle
+ *         in: path
+ *         description: Title of Anime
+ *         required: true
+ *         schema:
+ *           type: string
  *       - name: RateData
  *         in: body
  *         description: Data of the rate to be registered
@@ -547,7 +553,7 @@
  *           type: object
  *           properties:
  *             rating:
- *               type: Number
+ *               type: number
  *             comments:
  *               type: string
  *     responses:

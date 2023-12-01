@@ -12,5 +12,7 @@ router.get('/listByValue/:rating', authServices.authenticateMiddleware, ratingCo
 router.put('/edit/:comments', authServices.authenticateMiddleware, adminServices.authorizeAdminMiddleware, ratingController.editCommentsRatings);
 // Deleta as avaliações por id
 router.delete('/:_id', authServices.authenticateMiddleware, adminServices.authorizeAdminMiddleware, ratingController.deleteRating);
+// rota para apagar todos os ratings de um anime
+router.delete('/deleteAll/:title', authServices.authenticateMiddleware, adminServices.authorizeAdminMiddleware, ratingController.deleteAll);
 
 module.exports = router;

@@ -98,6 +98,50 @@ const deleteRating = async (req, res) => {
     res.status(200).json({ message: 'Hello Admin, Rating deleted successfully' });
 };
 
+// const deleteAll = async (req, res) => {
+//     const animeTitle = req.params.title;
+
+//     // Verifica se o anime existe
+//     const animeToUpdate = await Anime.findOne({ title: animeTitle });
+//     if (!animeToUpdate) {
+//         return res.status(404).json({ error: 'Anime not found' });
+//     }
+    
+//     // Deleta no banco de dados
+//     await animeToUpdate.rating.deleteMany();
+    
+
+//     res.status(200).json({ message: 'Hello Admin, Anime updated successfully', anime: animeToUpdate });
+
+    
+// }
+
+const deleteAll = async (req, res) => {
+    // try {
+        const animeTitle = req.params.title;
+        console.log("entrou");
+        console.log(animeTitle);
+
+        // Encontrar o anime pelo nome
+        const anime = await Anime.findOne({ title: animeTitle });
+        if (!anime) {
+            return res.status(404).json({ error: 'Anime not found' });
+        }
+
+        // Encontrar e deletar todos os ratings associados ao anime
+        await Rating.deleteMany({ _id: { $in: anime.rating } });
+
+        // Limpar o array de ratings do anime
+        anime.rating = [];
+        await anime.save();
+
+        res.status(200).json({ message: 'All ratings for the anime deleted successfully' });
+    // } catch (error) {
+    //     console.error(error);
+    //     res.status(500).json({ error: 'Internal Server Error' });
+    // }
+};
+
 
   
 
@@ -105,5 +149,6 @@ module.exports = {
     rateAnime,
     listRatingsByValue,
     editCommentsRatings,
-    deleteRating
+    deleteRating,
+    deleteAll
 };
