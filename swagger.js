@@ -243,6 +243,50 @@
 
 /**
  * @swagger
+ * /animes/exportAnimes:
+ *   get:
+ *     summary: Get a list csv of anime
+ *     tags: [Anime]
+ *     security:
+ *     parameters:
+ *       - name: limite
+ *         in: query
+ *         description: Number of items per page
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 10
+ *       - name: pagina
+ *         in: query
+ *         description: Page number for paginated results
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 10
+ *     responses:
+ *       200:
+ *         description: List of anime retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   title:
+ *                     type: string
+ *                   description:
+ *                     type: string
+ *       401:
+ *         description: Not authorized
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
  * /user/register:
  *   post:
  *     summary: Register a new user 
