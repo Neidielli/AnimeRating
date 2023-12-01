@@ -91,7 +91,6 @@ const listAnimes = async (req, res) => {
         }
 
         res.json(animes);
-        return { data: animes };
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -111,32 +110,80 @@ const getAnimeByTitle = async (req, res) => {
     res.json(animes);
 };
 
+// const exportAnimes = async (req, res) => {
+//     const { data } = await listAnimes(req, res);
+//     console.log(data);
+
+//     const csvData = [];
+//     data.forEach(anime => {
+//       csvData.push({
+//         Title: anime.title,
+//         Description: anime.description,
+//         Rating: anime.rating !== undefined ? anime.rating : 'N/A',
+//         Comments: anime.comments !== undefined ? anime.comments: 'N/A',
+//       });
+//     });
+
+//     const csvString = await convertToCSV(csvData);
+//     const csvFileName = 'anime_list.csv';
+
+//     fs.writeFileSync(csvFileName, csvString);
+
+//     res.setHeader('Content-Type', 'text/csv');
+//     res.setHeader('Content-Disposition', `attachment; filename=${csvFileName}`);
+
+//     fs.createReadStream(csvFileName).pipe(res);
+
+//     return;
+// };
+
 const exportAnimes = async (req, res) => {
-    const { data } = await listAnimes(req, res);
-    console.log(data);
+    // try {
+        const { limite, pagina } = req.query;
 
-    const csvData = [];
-    data.forEach(anime => {
-      csvData.push({
-        Title: anime.title,
-        Description: anime.description,
-        Rating: anime.rating !== undefined ? anime.rating : 'N/A',
-        Comments: anime.comments !== undefined ? anime.comments: 'N/A',
-      });
-    });
+        if (!limite || !pagina) {
+            return res.status(400).json({ error: 'Limite and pagina parameters are required.' });
+        }
 
-    const csvString = await convertToCSV(csvData);
-    const csvFileName = 'anime_list.csv';
+        const limiteInt = parseInt(limite, 10);
+        const paginaInt = parseInt(pagina, 10);
 
-    fs.writeFileSync(csvFileName, csvString);
+        if (!Number.isInteger(limiteInt) || !Number.isInteger(paginaInt) || limiteInt <= 0 || paginaInt < 1) {
+            return res.status(400).json({ error: 'Invalid pagination parameters. Please provide valid values.' });
+        }
 
-    res.setHeader('Content-Type', 'text/csv');
-    res.setHeader('Content-Disposition', `attachment; filename=${csvFileName}`);
+        const animes = await Anime.find().skip((paginaInt - 1) * limiteInt).limit(limiteInt).populate('rating');
 
-    fs.createReadStream(csvFileName).pipe(res);
+        if (!animes || animes.length === 0) {
+            return res.status(404).json({ error: 'No animes found' });
+        }
 
-    return;
+        const csvData = [];
+        animes.forEach(anime => {
+            csvData.push({
+                Title: anime.title,
+                Description: anime.description,
+                Rating: anime.rating !== undefined ? anime.rating : 'N/A',
+                Comments: anime.comments !== undefined ? anime.comments : 'N/A',
+            });
+        });
+
+        const csvString = await convertToCSV(csvData);
+        const csvFileName = 'anime_list.csv';
+
+        // Usando res.attachment para configurar os cabeçalhos necessários
+        res.attachment(csvFileName);
+        // Enviando o conteúdo do arquivo CSV diretamente
+        res.send(csvString);
+
+        return;
+    // } catch (error) {
+    //     console.error(error);
+    //     return res.status(500).json({ error: 'Internal Server Error' });
+    // }
 };
+
+
 
 function convertToCSV(data) {
     const header = Object.keys(data[0]).join(',') + '\n';
