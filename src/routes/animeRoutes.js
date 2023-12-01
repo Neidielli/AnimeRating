@@ -12,8 +12,10 @@ router.put('/edit/:title', authServices.authenticateMiddleware, adminServices.au
 router.delete('/delete/:title', authServices.authenticateMiddleware, adminServices.authorizeAdminMiddleware, animeController.deleteAnime);
 // Lista todos animes
 router.get('/list', animeController.listAnimes);
+
+// Exporta a lista de animes
+router.get('/exportAnimes',  animeController.exportAnimes);
 // Lista por nome
 router.get('/:title', animeController.getAnimeByTitle);
-
 
 module.exports = router;

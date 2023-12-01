@@ -10,7 +10,7 @@ router.post('/:animeTitle/rate', authServices.authenticateMiddleware, ratingCont
 router.get('/listByValue/:rating', authServices.authenticateMiddleware, ratingController.listRatingsByValue);
 // Admin Edita comentários
 router.put('/edit/:comments', authServices.authenticateMiddleware, adminServices.authorizeAdminMiddleware, ratingController.editCommentsRatings);
-// Deleta todas as avaliações
+// Deleta as avaliações por id
 router.delete('/:_id', authServices.authenticateMiddleware, adminServices.authorizeAdminMiddleware, ratingController.deleteRating);
 
 module.exports = router;

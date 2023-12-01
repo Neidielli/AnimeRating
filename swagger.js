@@ -3,14 +3,14 @@
  * tags:
  *   - name: Install
  *     description: Operations related to database installation
+ *   - name: Auth
+ *     description: Authentication-related operations
  *   - name: Anime
  *     description: Anime-related operations
  *   - name: User
  *     description: User-related operations
  *   - name: Rating
  *     description: Operations related to anime reviews
- *   - name: Auth
- *     description: Authentication-related operations
  */
 
 /**
@@ -28,7 +28,36 @@
 
 /**
  * @swagger
- * /create:
+ * /login:
+ *   post:
+ *     summary: Authenticate user
+ *     tags: [Auth]
+ *     parameters:
+ *       - name: Credentials
+ *         in: body
+ *         description: User credentials for authentication
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *             password:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: User successfully authenticated
+ *       401:
+ *         description: Invalid credentials
+ *       500:
+ *         description: Internal server error
+ */
+
+
+
+/**
+ * @swagger
+ * /animes/create:
  *   post:
  *     summary: Register a new anime (admin)
  *     tags: [Anime]
@@ -57,7 +86,7 @@
 
 /**
  * @swagger
- * /edit/{title}:
+ * /animes/edit/{title}:
  *   put:
  *     summary: Update an existing anime (admin)
  *     tags: [Anime]
@@ -94,7 +123,7 @@
 
 /**
  * @swagger
- * /delete/{title}:
+ * /animes/delete/{title}:
  *   delete:
  *     summary: Delete an existing anime (admin)
  *     tags: [Anime]
@@ -120,7 +149,7 @@
 
 /**
  * @swagger
- * /list:
+ * /animes/list:
  *   get:
  *     summary: Get a list of anime
  *     tags: [Anime]
@@ -164,7 +193,7 @@
 
 /**
  * @swagger
- * /{title}:
+ * /animes/{title}:
  *   get:
  *     summary: Get a list of one anime (admin)
  *     tags: [Anime]
@@ -214,7 +243,7 @@
 
 /**
  * @swagger
- * /register:
+ * /user/register:
  *   post:
  *     summary: Register a new user 
  *     tags: [User]
@@ -244,7 +273,7 @@
 
 /**
  * @swagger
- * /edit/{email}:
+ * /user/edit/{email}:
  *   put:
  *     summary: Update an existing user
  *     tags: [User]
@@ -283,7 +312,7 @@
 
 /**
  * @swagger
- * /admin/register:
+ * /user/admin/register:
  *   post:
  *     summary: Register a new user (admin)
  *     tags: [User]
@@ -314,7 +343,7 @@
 
 /**
  * @swagger
- * /admin/list:
+ * /user/admin/list:
  *   get:
  *     summary: Get a list of users (admin)
  *     tags: [User]
@@ -361,7 +390,7 @@
 
 /**
  * @swagger
- * /admin/{email}:
+ * /user/admin/{email}:
  *   put:
  *     summary: Update an existing user (admin)
  *     tags: [User]
@@ -400,7 +429,7 @@
 
 /**
  * @swagger
- * /admin/{email}:
+ * /user/admin/{email}:
  *   delete:
  *     summary: Delete an existing user (admin)
  *     tags: [User]
@@ -426,7 +455,7 @@
 
 /**
  * @swagger
- * /admin/registerAdmin:
+ * /user/admin/registerAdmin:
  *   post:
  *     summary: Register a new Admin (admin)
  *     tags: [User]
@@ -459,7 +488,7 @@
 
 /**
  * @swagger
- * /{title}/rate:
+ * /rating/{title}/rate:
  *   post:
  *     summary: Rate a anime 
  *     tags: [Rating]
@@ -488,7 +517,7 @@
 
 /**
  * @swagger
- * /listByValue/{rating}:
+ * /rating/listByValue/{rating}:
  *   get:
  *     summary: Get a list of rate
  *     tags: [Rating]
@@ -533,7 +562,7 @@
 
 /**
  * @swagger
- * /edit/{comments}:
+ * /rating/edit/{comments}:
  *   put:
  *     summary: Update an existing rating (admin)
  *     tags: [Rating]
@@ -568,7 +597,7 @@
 
 /**
  * @swagger
- * /{_id}:
+ * /rating/{_id}:
  *   delete:
  *     summary: Delete an existing rate (admin)
  *     tags: [Rating]
@@ -591,31 +620,3 @@
  *       500:
  *         description: Internal server error
  */
-
-/**
- * @swagger
- * /login:
- *   post:
- *     summary: Authenticate user
- *     tags: [Auth]
- *     parameters:
- *       - name: Credentials
- *         in: body
- *         description: User credentials for authentication
- *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             email:
- *               type: string
- *             password:
- *               type: string
- *     responses:
- *       200:
- *         description: User successfully authenticated
- *       401:
- *         description: Invalid credentials
- *       500:
- *         description: Internal server error
- */
-

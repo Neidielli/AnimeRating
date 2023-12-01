@@ -1,6 +1,7 @@
 const Anime = require('../models/Anime');
 const Rating = require('../models/Rating');
 const errorHandler = require('../utils/errorHandler');
+const fs = require('fs');
 
 const createAnime = async (req, res) => {
     // try {
@@ -90,6 +91,7 @@ const listAnimes = async (req, res) => {
         }
 
         res.json(animes);
+        return { data: animes };
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -103,16 +105,54 @@ const getAnimeByTitle = async (req, res) => {
 
     // Verifica se o anime foi encontrado
     if (!animes) {
-        return res.status(404).json({ error: 'Anime not found' });
+        return res.status(404).json({ error: 'Anime not found 10' });
     }
 
     res.json(animes);
 };
+
+const exportAnimes = async (req, res) => {
+    const { data } = await listAnimes(req, res);
+    console.log(data);
+
+    const csvData = [];
+    data.forEach(anime => {
+      csvData.push({
+        Title: anime.title,
+        Description: anime.description,
+        Rating: anime.rating !== undefined ? anime.rating : 'N/A',
+        Comments: anime.comments !== undefined ? anime.comments: 'N/A',
+      });
+    });
+
+    const csvString = await convertToCSV(csvData);
+    const csvFileName = 'anime_list.csv';
+
+    fs.writeFileSync(csvFileName, csvString);
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', `attachment; filename=${csvFileName}`);
+
+    fs.createReadStream(csvFileName).pipe(res);
+
+    return;
+};
+
+function convertToCSV(data) {
+    const header = Object.keys(data[0]).join(',') + '\n';
+  
+    const rows = data.map(obj => {
+      return Object.values(obj).map(val => `"${val}"`).join(',');
+    }).join('\n');
+  
+    return header + rows;
+  }
 
 module.exports = {
     createAnime,
     editAnime,
     deleteAnime,
     listAnimes,
-    getAnimeByTitle
+    getAnimeByTitle,
+    exportAnimes
 };
